@@ -128,4 +128,4 @@ SNNetworking+helper.m：
 
 ## License
 
-SNNetWorkingGroup是根据MIT许可证发布的。有关详细信息，请参阅LICENSE。
+SNNetWorkingGroup是根据MIT许可证发布的。有关详细信息，请参阅[LICENSE](https://github.com/snlo/SNNetWorkingGroup/blob/master/LICENSE)。
