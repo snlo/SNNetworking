@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "SNNetworking"
-  s.version      = "0.0.1"
+  s.version      = "0.0.3"
   s.summary      = "A Network Working Group Based on AFNetWoking."
 
   # This description is used to generate tags and improve search results.

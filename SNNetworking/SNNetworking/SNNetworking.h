@@ -6,10 +6,11 @@
 //  Copyright © 2016年 snlo. All rights reserved.
 //
 
-#import "AFNetworking.h"
-#import "UIKit+AFNetworking.h"
 #import <Foundation/Foundation.h>
 
+#import <AFNetworking.h>
+
+#import <UIKit+AFNetworking.h>
 
 __attribute__((objc_subclassing_restricted))
 
