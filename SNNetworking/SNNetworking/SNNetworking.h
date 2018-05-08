@@ -14,7 +14,7 @@
 
 __attribute__((objc_subclassing_restricted))
 
-__attribute__((objc_runtime_name("snlo")))
+__attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
 
 @interface SNNetworking : NSObject
 
