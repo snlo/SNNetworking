@@ -1,5 +1,5 @@
-# SNNetWorkingGroup
-基于 ’AFNetWoking3.0‘ 的一个网络工作组，旨在集中处理网络请求。当AFNetWoking框架更新时能够快速的替换升级。
+# SNNetWorking
+基于 ’AFNetWoking3.x‘ 的一个网络工作组，旨在集中处理网络请求。当AFNetWoking框架更新时能够快速的替换升级。
 
 ## Features
 
