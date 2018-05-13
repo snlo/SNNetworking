@@ -22,8 +22,6 @@
 		5EB0046820A0B978003E8AF8 /* SNFileNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EB0046020A0B978003E8AF8 /* SNFileNetworkManager.m */; };
 		5EB0046920A0B978003E8AF8 /* SNNetworkTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EB0046120A0B978003E8AF8 /* SNNetworkTransformer.m */; };
 		5EB0046C20A0B9FA003E8AF8 /* SNNetworkTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EB0046B20A0B9FA003E8AF8 /* SNNetworkTool.m */; };
-		5EB0047120A0BCBD003E8AF8 /* NSString+SNNetworkingJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EB0046F20A0BCBD003E8AF8 /* NSString+SNNetworkingJSON.m */; };
-		5EB0047220A0BCBD003E8AF8 /* NSString+SNNetworkingHASH.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EB0047020A0BCBD003E8AF8 /* NSString+SNNetworkingHASH.m */; };
 		8018630E41051C1D267BC3AD /* libPods-SNNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86D07D0001D56137E02A712F /* libPods-SNNetworking.a */; };
 /* End PBXBuildFile section */
 
@@ -77,10 +75,6 @@
 		5EB0046520A0B978003E8AF8 /* SNNetworkTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNNetworkTransformer.h; sourceTree = "<group>"; };
 		5EB0046A20A0B9FA003E8AF8 /* SNNetworkTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SNNetworkTool.h; sourceTree = "<group>"; };
 		5EB0046B20A0B9FA003E8AF8 /* SNNetworkTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SNNetworkTool.m; sourceTree = "<group>"; };
-		5EB0046D20A0BCBC003E8AF8 /* NSString+SNNetworkingJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SNNetworkingJSON.h"; sourceTree = "<group>"; };
-		5EB0046E20A0BCBD003E8AF8 /* NSString+SNNetworkingHASH.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SNNetworkingHASH.h"; sourceTree = "<group>"; };
-		5EB0046F20A0BCBD003E8AF8 /* NSString+SNNetworkingJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SNNetworkingJSON.m"; sourceTree = "<group>"; };
-		5EB0047020A0BCBD003E8AF8 /* NSString+SNNetworkingHASH.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SNNetworkingHASH.m"; sourceTree = "<group>"; };
 		86D07D0001D56137E02A712F /* libPods-SNNetworking.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SNNetworking.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C9F1A16FE6DF3C8F5FDA20C /* Pods-SNNetworkingTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SNNetworkingTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SNNetworkingTests/Pods-SNNetworkingTests.debug.xcconfig"; sourceTree = "<group>"; };
 		901DA24041099256D514810F /* libPods-SNNetworkingTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SNNetworkingTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -184,10 +178,6 @@
 		5EB0045C20A0B95B003E8AF8 /* SNNetworking */ = {
 			isa = PBXGroup;
 			children = (
-				5EB0046E20A0BCBD003E8AF8 /* NSString+SNNetworkingHASH.h */,
-				5EB0047020A0BCBD003E8AF8 /* NSString+SNNetworkingHASH.m */,
-				5EB0046D20A0BCBC003E8AF8 /* NSString+SNNetworkingJSON.h */,
-				5EB0046F20A0BCBD003E8AF8 /* NSString+SNNetworkingJSON.m */,
 				5EB0046A20A0B9FA003E8AF8 /* SNNetworkTool.h */,
 				5EB0046B20A0B9FA003E8AF8 /* SNNetworkTool.m */,
 				5EB0046220A0B978003E8AF8 /* SNNetworkCachePool.h */,
@@ -226,6 +216,7 @@
 				5EB0042320A0B814003E8AF8 /* Sources */,
 				5EB0042420A0B814003E8AF8 /* Frameworks */,
 				5EB0042520A0B814003E8AF8 /* Resources */,
+				05B0EE834A593436C4EDB10C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -281,7 +272,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0930;
-				ORGANIZATIONNAME = snloveydus;
+				ORGANIZATIONNAME = snlo;
 				TargetAttributes = {
 					5EB0042620A0B814003E8AF8 = {
 						CreatedOnToolsVersion = 9.3;
@@ -344,6 +335,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		05B0EE834A593436C4EDB10C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-SNNetworking/Pods-SNNetworking-resources.sh",
+				"${PODS_ROOT}/SNTool/SNTool/SNTool/SNTool.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SNTool.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SNNetworking/Pods-SNNetworking-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		87D993EC0ECEF8DC38643558 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -409,12 +418,10 @@
 				5EB0046920A0B978003E8AF8 /* SNNetworkTransformer.m in Sources */,
 				5EB0042F20A0B814003E8AF8 /* ViewController.m in Sources */,
 				5EB0043A20A0B815003E8AF8 /* main.m in Sources */,
-				5EB0047120A0BCBD003E8AF8 /* NSString+SNNetworkingJSON.m in Sources */,
 				5EB0046C20A0B9FA003E8AF8 /* SNNetworkTool.m in Sources */,
 				5EB0046620A0B978003E8AF8 /* SNNetworking.m in Sources */,
 				5EB0046820A0B978003E8AF8 /* SNFileNetworkManager.m in Sources */,
 				5EB0042C20A0B814003E8AF8 /* AppDelegate.m in Sources */,
-				5EB0047220A0BCBD003E8AF8 /* NSString+SNNetworkingHASH.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

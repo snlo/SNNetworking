@@ -1,5 +1,5 @@
 //
-//  NSString+SNNetworkingHASH.h
+//  NSString+SNFoundationHASH.h
 //  AFNetworkingTest
 //
 //  Created by snlo on 16/7/1.
@@ -7,9 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CommonCrypto/CommonCrypto.h>
 
-@interface NSString (SNNetworkingHASH)
+@interface NSString (SNFoundationHASH)
 
 #pragma mark - 散列函数
 /**

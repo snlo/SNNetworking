@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "SNNetworking"
-  s.version      = "0.0.5"
+  s.version      = "0.0.6"
   s.summary      = "A Network Working Group Based on AFNetWoking."
 
   # This description is used to generate tags and improve search results.
@@ -134,5 +134,7 @@ Pod::Spec.new do |s|
 
   s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
   s.dependency 'AFNetworking'
+  s.dependency 'SNTool'
+  s.dependency 'SNFoundation'
 
 end

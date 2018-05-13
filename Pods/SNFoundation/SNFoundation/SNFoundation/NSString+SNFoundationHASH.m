@@ -1,14 +1,16 @@
 //
-//  NSString+SNNetworkingHASH.m
+//  NSString+SNFoundationHASH.m
 //  AFNetworkingTest
 //
 //  Created by snlo on 16/7/1.
 //  Copyright © 2016年 snlo. All rights reserved.
 //
 
-#import "NSString+SNNetworkingHASH.h"
+#import "NSString+SNFoundationHASH.h"
 
-@implementation NSString (SNNetworkingHASH)
+#import <CommonCrypto/CommonCrypto.h>
+
+@implementation NSString (SNFoundationHASH)
 
 #pragma mark - 散列函数
 - (NSString *)md5String {
