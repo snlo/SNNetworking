@@ -23,6 +23,7 @@
 		5EB0046920A0B978003E8AF8 /* SNNetworkTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EB0046120A0B978003E8AF8 /* SNNetworkTransformer.m */; };
 		5EB0046C20A0B9FA003E8AF8 /* SNNetworkTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EB0046B20A0B9FA003E8AF8 /* SNNetworkTool.m */; };
 		8018630E41051C1D267BC3AD /* libPods-SNNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86D07D0001D56137E02A712F /* libPods-SNNetworking.a */; };
+		983CE4D620B27495007987FD /* SNNetworking+SNNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 983CE4D520B27495007987FD /* SNNetworking+SNNetworking.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,8 @@
 		86D07D0001D56137E02A712F /* libPods-SNNetworking.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SNNetworking.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C9F1A16FE6DF3C8F5FDA20C /* Pods-SNNetworkingTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SNNetworkingTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SNNetworkingTests/Pods-SNNetworkingTests.debug.xcconfig"; sourceTree = "<group>"; };
 		901DA24041099256D514810F /* libPods-SNNetworkingTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SNNetworkingTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		983CE4D420B27495007987FD /* SNNetworking+SNNetworking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SNNetworking+SNNetworking.h"; sourceTree = "<group>"; };
+		983CE4D520B27495007987FD /* SNNetworking+SNNetworking.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SNNetworking+SNNetworking.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,6 +189,8 @@
 				5EB0046020A0B978003E8AF8 /* SNFileNetworkManager.m */,
 				5EB0046420A0B978003E8AF8 /* SNNetworking.h */,
 				5EB0045E20A0B978003E8AF8 /* SNNetworking.m */,
+				983CE4D420B27495007987FD /* SNNetworking+SNNetworking.h */,
+				983CE4D520B27495007987FD /* SNNetworking+SNNetworking.m */,
 				5EB0046520A0B978003E8AF8 /* SNNetworkTransformer.h */,
 				5EB0046120A0B978003E8AF8 /* SNNetworkTransformer.m */,
 			);
@@ -422,6 +427,7 @@
 				5EB0046620A0B978003E8AF8 /* SNNetworking.m in Sources */,
 				5EB0046820A0B978003E8AF8 /* SNFileNetworkManager.m in Sources */,
 				5EB0042C20A0B814003E8AF8 /* AppDelegate.m in Sources */,
+				983CE4D620B27495007987FD /* SNNetworking+SNNetworking.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
