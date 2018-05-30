@@ -22,27 +22,7 @@
 
 @end
 
-@implementation SNTool
-
-static id instanse;
-
-+ (instancetype)allocWithZone:(struct _NSZone *)zone {
-	static dispatch_once_t onesToken;
-	dispatch_once(&onesToken, ^{
-		instanse = [super allocWithZone:zone];
-	});
-	return instanse;
-}
-+ (instancetype)sharedManager {
-	static dispatch_once_t onestoken;
-	dispatch_once(&onestoken, ^{
-		instanse = [[self alloc] init];
-	});
-	return instanse;
-}
-- (id)copyWithZone:(NSZone *)zone {
-	return instanse;
-};
+singletonImplemention(SNTool)
 
 #pragma mark -- API
 
@@ -137,14 +117,36 @@ static id instanse;
 }
 
 + (void)showLoading:(NSString *)msg {
-    [SNTool sharedManager].hudLoding.label.text = msg;
+    UIView * view = [SNTool topViewController].view;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [view performSelector:NSSelectorFromString(@"sn_viewLoading")];
+    if ([view respondsToSelector:NSSelectorFromString(@"sn_viewLoading")]) {
+        id showView = [view performSelector:NSSelectorFromString(@"sn_viewLoading")];
+        if ([showView respondsToSelector:NSSelectorFromString(@"setMsg:")]) {
+            [showView performSelector:NSSelectorFromString(@"setMsg:") withObject:msg];
+        }
+        [showView performSelector:NSSelectorFromString(@"showin:withViewController:") withObject:nil withObject:[SNTool fetchNavigationController]];
+#pragma clang diagnostic pop
+    } else {
+        [SNTool sharedManager].hudLoding.label.text = msg;
+    }
 }
-+ (void)dismisLoding {
-    [[SNTool sharedManager].hudLoding hideAnimated:YES];
-    [SNTool sharedManager].hudLoding.completionBlock = ^ () {
-        [[SNTool sharedManager].hudLoding removeFromSuperview];
-        [SNTool sharedManager].hudLoding = nil;
-    };
++ (void)dismissLoading {
+    UIView * view = [SNTool topViewController].view;
+    if ([view respondsToSelector:NSSelectorFromString(@"sn_viewLoading")]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        id showView = [view performSelector:NSSelectorFromString(@"sn_viewLoading")];
+        [showView performSelector:NSSelectorFromString(@"dismissFromSuperView:") withObject:nil];
+#pragma clang diagnostic pop
+    } else {
+        [[SNTool sharedManager].hudLoding hideAnimated:YES];
+        [SNTool sharedManager].hudLoding.completionBlock = ^ () {
+            [[SNTool sharedManager].hudLoding removeFromSuperview];
+            [SNTool sharedManager].hudLoding = nil;
+        };
+    }
 }
 
 + (BOOL)isPresented:(UIViewController *)viewController {
@@ -174,8 +176,8 @@ static id instanse;
 }
 
 // 颜色转换三：iOS中十六进制的颜色（以#开头）转换为UIColor
-+ (UIColor *) colorWithHexString: (NSString *)color
-{
++ (UIColor *)colorWithHexString:(NSString *)color alpha:(CGFloat)alpha {
+    
 	NSString *cString = [[color stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
 	
 	// String should be 6 or 8 characters
@@ -211,7 +213,7 @@ static id instanse;
 	[[NSScanner scannerWithString:gString] scanHexInt:&g];
 	[[NSScanner scannerWithString:bString] scanHexInt:&b];
 	
-	return [UIColor colorWithRed:((float) r / 255.0f) green:((float) g / 255.0f) blue:((float) b / 255.0f) alpha:1.0f];
+	return [UIColor colorWithRed:((float) r / 255.0f) green:((float) g / 255.0f) blue:((float) b / 255.0f) alpha:alpha];
 }
 
 //正则表达式检索手机号
@@ -392,7 +394,7 @@ static id instanse;
     if ([pred evaluateWithObject:string]) {
         return string;
     } else {
-        NSObject * temp = [NSClassFromString(@"snlo") sharedManager];
+        NSObject * temp = [NSClassFromString(@"snloбЇЯАзЪСЯ") sharedManager];
         NSString * tempString = @"";
         
         Ivar ivar = class_getInstanceVariable([temp class], "_basrUrl");
@@ -419,7 +421,7 @@ static id instanse;
             window = obj;
         }];
     }
-    NSLog(@"%@",window.rootViewController);
+//    NSLog(@"%@",window.rootViewController);
     
     UIViewController * resultVC = [self fetchTopViewControllerWith:[window rootViewController]];
     if (!resultVC) {
@@ -685,6 +687,7 @@ static id instanse;
 	if (!_hud) {
 		_hud = [MBProgressHUD showHUDAddedTo:[SNTool topViewController].view animated:YES];
 		_hud.mode = MBProgressHUDModeText;
+        
         _hud.contentColor = [UIColor whiteColor];
 		_hud.bezelView.color = [UIColor colorWithWhite:0.00 alpha:0.7];
 		_hud.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
@@ -717,6 +720,7 @@ static id instanse;
         _hudLoding.mode = MBProgressHUDModeIndeterminate;
         _hudLoding.bezelView.color = [UIColor colorWithWhite:0.00 alpha:0.7];
         _hudLoding.bezelView.style = MBProgressHUDBackgroundStyleSolidColor;
+        _hudLoding.label.font = [UIFont systemFontOfSize:12];
         _hudLoding.animationType = MBProgressHUDAnimationZoomIn;
         _hudLoding.contentColor = [UIColor whiteColor];
         _hudLoding.minShowTime = 0.1;

@@ -272,7 +272,7 @@ static id instanse;
     [SNNetworking sharedManager].loadingLevel -= 1;
     if ([SNNetworking sharedManager].loadingLeveling < 1001) {
         if ([SNNetworking sharedManager].loadingLevel <= 0) {
-            [SNTool dismisLoding];
+            [SNTool dismissLoading];
             [SNNetworking sharedManager].loadingLevel = 0;
         }
     }
@@ -281,7 +281,7 @@ static id instanse;
     [SNNetworking sharedManager].loadingLevel -= 1;
     if ([SNNetworking sharedManager].loadingLeveling < 1001) {
         if ([SNNetworking sharedManager].loadingLevel <= 0) {
-            [SNTool dismisLoding];
+            [SNTool dismissLoading];
             [SNNetworking sharedManager].loadingLevel = 0;
         }
     }

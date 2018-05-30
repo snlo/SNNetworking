@@ -9,16 +9,26 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import "SNTololMacro.h"
+#import "SNToolMacro.h"
 #import "Singletion.h"
 
 #import "NSString+SNTool.h"
 
+#import "SNConcreteProtocol.h"
+#import "SNSafeCategory.h"
+#import "SNRuntimeExtensions.h"
+
+#import <MBProgressHUD.h>
+
 __attribute__((objc_subclassing_restricted))
 
-@interface SNTool : NSObject
+singletonInterface(SNTool)
 
-+ (instancetype)sharedManager;
+@property (nonatomic, readonly) MBProgressHUD * hud;
+
+@property (nonatomic, readonly) MBProgressHUD * hudSuccess;
+
+@property (nonatomic, readonly) MBProgressHUD * hudLoding;
 
 /**
  获取根视图控制器，最后一个window的rootViewController
@@ -55,7 +65,7 @@ __attribute__((objc_subclassing_restricted))
 /**
  销毁 全局菊花
  */
-+ (void)dismisLoding;
++ (void)dismissLoading;
 
 /**
  判断一个视图控制器是否是模态推送出来的
@@ -66,6 +76,11 @@ __attribute__((objc_subclassing_restricted))
  任意对象的上一个响应者ViewContrllor实咧，前提是它已经被加载
  */
 + (UIViewController *)topViewController;
+
+/**
+ 获取‘topViewController’的 UINavigationController
+ */
++ (UINavigationController *)fetchNavigationController;
 
 /**
  读取颜色的透明度
@@ -81,9 +96,9 @@ __attribute__((objc_subclassing_restricted))
  颜色转换
  
  @param color iOS中十六进制的颜色（以#开头）
- @return UIColor
+ @param alpha 透明度
  */
-+ (UIColor *)colorWithHexString:(NSString *)color;
++ (UIColor *)colorWithHexString:(NSString *)color alpha:(CGFloat)alpha;
 
 /**
  正则表达式检索手机号:(^1([3-9])\\d{9}$)
