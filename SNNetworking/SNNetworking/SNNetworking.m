@@ -68,7 +68,6 @@ static id instanse;
 
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
 
-        NSLog(@"get error --> %@",[SNNetworkTransformer valueFromError:error]);
         NSLog(@"%@",error.description);
         [SNNetworking netWorkingFailure];
         
@@ -103,7 +102,6 @@ static id instanse;
 
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         
-        NSLog(@"post error --> %@",[SNNetworkTransformer valueFromError:error]);
         NSLog(@"%@",error.description);
         [SNNetworking netWorkingFailure];
         
@@ -147,8 +145,7 @@ static id instanse;
 
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         
-        NSLog(@"post error --> %@",[SNNetworkTransformer valueFromError:error]);
-        
+        NSLog(@"%@",error.description);
         [SNNetworking netWorkingFailure];
         
         if (failure) {
@@ -190,8 +187,7 @@ static id instanse;
 
         } else {
             
-            NSLog(@"downloaded error --> %@",[SNNetworkTransformer valueFromError:error]);
-            
+            NSLog(@"%@",error.description);
             [SNNetworking netWorkingFailure];
             
             if (failure) {
