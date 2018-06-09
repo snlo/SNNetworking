@@ -64,6 +64,16 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
             failure:(void(^)(NSError *error))failure;
 
 /**
+ POST AND GET
+ */
++ (void)postWithUrl:(NSString *)url
+          getParams:(id)getParams
+         parameters:(id)parameters
+           progress:(void(^)(double percentage))progress
+            success:(void(^)(id responseObject))success
+            failure:(void(^)(NSError *error))failure;
+
+/**
  upload
  */
 + (void)uploadWithUrl:(NSString *)url

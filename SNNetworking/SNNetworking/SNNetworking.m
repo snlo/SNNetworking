@@ -114,6 +114,47 @@ static id instanse;
     }];
 }
 
+//POST AND GET
++ (void)postWithUrl:(NSString *)url getParams:(id)getParams parameters:(id)parameters progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure {
+    [SNNetworking netWorkingStart];
+    
+    __block NSString * urls = url;
+    
+    if ([getParams isKindOfClass:[NSDictionary class]]) {
+        NSDictionary * dic = [NSDictionary dictionaryWithDictionary:getParams];
+        [dic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            urls = [urls stringByAppendingFormat:@"?%@=%@",key,obj];
+        }];
+    }
+    
+    [[SNNetworking sharedManager].manager POST:urls parameters:parameters progress:^(NSProgress * _Nonnull uploadProgress) {
+        
+        if (progress) progress(uploadProgress.fractionCompleted);
+        
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        [SNNetworking netWorkingSuccess];
+        
+        if (success)  {
+            success(responseObject);
+        } else {
+            [SNNetworking loadingRecovery];
+        }
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        
+        NSLog(@"%@",error.description);
+        [SNNetworking netWorkingFailure];
+        
+        if (failure) {
+            failure(error);
+        } else {
+            [SNNetworking loadingRecovery];
+        }
+        
+    }];
+}
+
 //upload
 + (void)uploadWithUrl:(NSString *)url parameters:(id)parameters dataArray:(NSArray <NSData *> *)dataArray name:(NSString *)name fileSuffixName:(NSString *)fileSuffixName type:(NSString *)type progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure
 {
