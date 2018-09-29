@@ -69,6 +69,8 @@ static id instanse;
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
 
         NSLog(@"%@",error.description);
+        NSLog(@" - url - %@",url);
+        NSLog(@" - parameters - %@",parameters);
         [SNNetworking netWorkingFailure];
         
         if (failure) {
@@ -103,6 +105,8 @@ static id instanse;
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         
         NSLog(@"%@",error.description);
+        NSLog(@" - url - %@",url);
+        NSLog(@" - parameters - %@",parameters);
         [SNNetworking netWorkingFailure];
         
         if (failure) {
@@ -187,6 +191,8 @@ static id instanse;
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         
         NSLog(@"%@",error.description);
+        NSLog(@" - url - %@",url);
+        NSLog(@" - parameters - %@",parameters);
         [SNNetworking netWorkingFailure];
         
         if (failure) {
@@ -387,7 +393,7 @@ static id instanse;
 
 - (NSString *)basrUrl {
     if (!_basrUrl) {
-        _basrUrl = @"http://ac.aitelife.com";
+        _basrUrl = @"setting in AppDelegate.m";
     } return _basrUrl;
 }
 
