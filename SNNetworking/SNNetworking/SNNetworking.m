@@ -354,10 +354,27 @@ static id instanse;
 }
 
 #pragma mark -- getter
-
++ (AFHTTPSessionManager *)verificationServerCertificateWith:(NSSet <NSData *> *)certificate {
+    
+    AFSecurityPolicy * securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
+    
+    [securityPolicy setAllowInvalidCertificates:YES];
+    securityPolicy.validatesDomainName = NO;
+    if (!certificate) {
+        @throw [NSException exceptionWithName:@"无效的证书文件,请先配置‘[SNNetworking sharedManager].pinnedCertificates’" reason:@"未找到相关文件" userInfo:nil];
+    } else {
+        securityPolicy.pinnedCertificates = certificate;
+    }
+    
+    return securityPolicy;
+}
 - (AFHTTPSessionManager *)manager {
     if (!_manager) {
         _manager = [AFHTTPSessionManager manager];
+        
+        _manager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
+        _manager.securityPolicy.allowInvalidCertificates = YES;
+        _manager.securityPolicy.validatesDomainName = NO;
     }
     
     _manager.requestSerializer.timeoutInterval = 30.f;//sn_超时
@@ -391,10 +408,101 @@ static id instanse;
     return _manager;
 }
 
-- (NSString *)basrUrl {
-    if (!_basrUrl) {
-        _basrUrl = @"setting in AppDelegate.m";
-    } return _basrUrl;
+@synthesize baseUrl = _baseUrl;
+- (void)setBaseUrl:(NSString *)baseUrl {
+    _baseUrl = baseUrl;
+    if ([_baseUrl hasPrefix:@"https://"]) {
+        
+    }
 }
+- (NSString *)baseUrl {
+    if (!_baseUrl) {
+        _baseUrl = @"setting in AppDelegate.m";
+    } return _baseUrl;
+}
+
+
+
++ (AFHTTPSessionManager *)verificationClientCertificateWith:(NSSet <NSData *> *)certificate {
+    __block AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
+    __weak typeof(manager) manager_weak = manager;
+    
+    [manager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition(NSURLSession*session, NSURLAuthenticationChallenge *challenge, NSURLCredential *__autoreleasing*_credential) {
+        
+        NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+        __autoreleasing NSURLCredential *credential =nil;
+        
+        if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+            
+            if([manager_weak.securityPolicy evaluateServerTrust:challenge.protectionSpace.serverTrust forDomain:challenge.protectionSpace.host]) {
+                credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+                
+                if(credential) {
+                    disposition =NSURLSessionAuthChallengeUseCredential;
+                } else {
+                    disposition =NSURLSessionAuthChallengePerformDefaultHandling;
+                }
+                
+            } else {
+                
+                disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+            }
+        } else {
+            // client authentication
+            SecIdentityRef identity = NULL;
+            SecTrustRef trust = NULL;
+            NSString * p12 = [[NSBundle mainBundle] pathForResource:@"client"ofType:@"pfx"];
+            NSFileManager *fileManager =[NSFileManager defaultManager];
+            
+            if(![fileManager fileExistsAtPath:p12]) {
+                NSLog(@"client.p12:not exist");
+            } else {
+                NSData * PKCS12Data = [NSData dataWithContentsOfFile:p12];
+                //#加载PKCS12证书，pfx或p12
+                if ([SNNetworking extractIdentity:&identity andTrust:&trust fromPKCS12Data:PKCS12Data]) {
+                    SecCertificateRef certificate = NULL;
+                    SecIdentityCopyCertificate(identity, &certificate);
+                    const void*certs[] = {certificate};
+                    CFArrayRef certArray =CFArrayCreate(kCFAllocatorDefault, certs,1,NULL);
+                    credential =[NSURLCredential credentialWithIdentity:identity certificates:(__bridge  NSArray*)certArray persistence:NSURLCredentialPersistencePermanent];
+                    disposition =NSURLSessionAuthChallengeUseCredential;
+                }
+            }
+        }
+        *_credential = credential;
+        return disposition;
+    }];
+    
+    return manager;
+}
+
+/**
+ **加载PKCS12证书，pfx或p12
+ **
+ **/
++ (BOOL)extractIdentity:(SecIdentityRef*)outIdentity andTrust:(SecTrustRef *)outTrust fromPKCS12Data:(NSData *)inPKCS12Data {
+    OSStatus securityError = errSecSuccess;
+    //client certificate password
+    NSDictionary*optionsDictionary = [NSDictionary dictionaryWithObject:@"你的p12密码"
+                                                                 forKey:(__bridge id)kSecImportExportPassphrase];
+    
+    CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
+    securityError = SecPKCS12Import((__bridge CFDataRef)inPKCS12Data,(__bridge CFDictionaryRef)optionsDictionary,&items);
+    
+    if(securityError == 0) {
+        CFDictionaryRef myIdentityAndTrust =CFArrayGetValueAtIndex(items,0);
+        const void*tempIdentity =NULL;
+        tempIdentity= CFDictionaryGetValue (myIdentityAndTrust,kSecImportItemIdentity);
+        *outIdentity = (SecIdentityRef)tempIdentity;
+        const void*tempTrust =NULL;
+        tempTrust = CFDictionaryGetValue(myIdentityAndTrust,kSecImportItemTrust);
+        *outTrust = (SecTrustRef)tempTrust;
+    } else {
+        NSLog(@"Failedwith error code %d",(int)securityError);
+        return NO;
+    }
+    return YES;
+}
+
 
 @end

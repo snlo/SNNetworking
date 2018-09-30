@@ -41,7 +41,21 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
 
 @property (nonatomic) AFHTTPSessionManager * manager;
 
-@property (nonatomic, strong) NSString * basrUrl;
+/**
+ 基础 url
+ */
+@property (nonatomic, strong) NSString * baseUrl;
+
+/**
+ cer等自签名证书集合
+ */
+@property (nonatomic, strong) NSSet <NSData *> * pinnedCertificates;
+
+/**
+ 证书x校验，支持单向验证和双向验证
+ @return AFSecurityPolicy
+ */
+- (AFSecurityPolicy *)customSecurityPolicy;
 
 #pragma mark -- network methods
 /**

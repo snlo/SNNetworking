@@ -18,20 +18,9 @@
                    success:(void(^)(id responseObject))success
                    failure:(void(^)(NSError *error))failure {
     
-    [SNNetworking sharedManager].manager.responseSerializer =
-    [AFImageResponseSerializer serializer];
+    [SNNetworking getWithUrl:imgurl parameters:nil progress:progress success:success failure:failure];
     
-    [SNNetworking getWithUrl:imgurl parameters:nil progress:progress success:^(id responseObject) {
-        if (success) {
-            success(responseObject);
-        }
-        [SNNetworking sharedManager].manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    } failure:^(NSError *error) {
-        if (failure) {
-            failure(error);
-        }
-        [SNNetworking sharedManager].manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    }];
+    [SNNetworking sharedManager].manager.responseSerializer = [AFImageResponseSerializer serializer];
     
 }
 
@@ -46,11 +35,13 @@
     NSMutableDictionary *cookieProperties = [NSMutableDictionary dictionary];
     
     [cookieProperties setObject:name forKey:NSHTTPCookieName];
-    
     [cookieProperties setObject:value forKey:NSHTTPCookieValue];
     
-    [cookieProperties setObject:@"test.cdlhzz.cn:888" forKey:NSHTTPCookieDomain];
-    [cookieProperties setObject:@"http://test.cdlhzz.cn:888" forKey:NSHTTPCookieOriginURL];
+    NSString * stringOriginURL = [SNNetworking sharedManager].baseUrl;
+    NSString * stringDomain = [stringOriginURL substringFromIndex:[stringOriginURL rangeOfString:@"://"].location + 3];
+    
+    [cookieProperties setObject:[NSString stringWithFormat:@"%@:888",stringDomain] forKey:NSHTTPCookieDomain];
+    [cookieProperties setObject:[NSString stringWithFormat:@"%@:888",stringOriginURL] forKey:NSHTTPCookieOriginURL];
     [cookieProperties setObject:@"/" forKey:NSHTTPCookiePath];
     [cookieProperties setObject:@"0" forKey:NSHTTPCookieVersion];
     
@@ -78,7 +69,6 @@
     return string;
 }
 
-//判断string是否为中文
 + (BOOL)isChinese:(NSString *)aString
 {
     if (aString.length < 1) {
