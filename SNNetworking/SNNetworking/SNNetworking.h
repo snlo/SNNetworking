@@ -47,7 +47,7 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
 @property (nonatomic, strong) NSString * baseUrl;
 
 /**
- cer等自签名证书集合
+ cer/CA 等自签名证书集合
  */
 @property (nonatomic, strong) NSSet <NSData *> * pinnedCertificates;
 

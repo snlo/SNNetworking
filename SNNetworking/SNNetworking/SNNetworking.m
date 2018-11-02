@@ -354,19 +354,53 @@ static id instanse;
 }
 
 #pragma mark -- getter
-+ (AFHTTPSessionManager *)verificationServerCertificateWith:(NSSet <NSData *> *)certificate {
++ (AFHTTPSessionManager *)verificationServerCertificateWith:(NSArray <NSString *> *)certificatePatchs {
     
     AFSecurityPolicy * securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
     
     [securityPolicy setAllowInvalidCertificates:YES];
     securityPolicy.validatesDomainName = NO;
-    if (!certificate) {
+	
+//	NSString *certFilePath = [[NSBundle mainBundle] pathForResource:@"server" ofType:@"der"];
+	
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	
+	__block NSMutableSet * certificateSet = [[NSMutableSet alloc] init];
+	[certificatePatchs enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+		
+		
+		
+		if (![fileManager fileExistsAtPath:obj]) {
+			NSLog(@"client.p12:not exist");
+			
+			return ;
+		} else {
+			NSData * certificateData = [NSData dataWithContentsOfFile:obj];
+			
+			[certificateSet addObject:certificateData];
+		}
+		
+		
+	}];
+	
+	
+	if (certificateSet.count < 1) {
+		NSLog(@"没有有效的证书");
+	} else {
+		securityPolicy.pinnedCertificates = certificateSet;
+	}
+
+	
+	
+    if (!certificateSet) {
         @throw [NSException exceptionWithName:@"无效的证书文件,请先配置‘[SNNetworking sharedManager].pinnedCertificates’" reason:@"未找到相关文件" userInfo:nil];
     } else {
-        securityPolicy.pinnedCertificates = certificate;
+        securityPolicy.pinnedCertificates = certificateSet;
     }
-    
-    return securityPolicy;
+	securityPolicy.pinnedCertificates = certificateSet;
+	[SNNetworking sharedManager].manager.securityPolicy = securityPolicy;
+	
+    return [SNNetworking sharedManager].manager;
 }
 - (AFHTTPSessionManager *)manager {
     if (!_manager) {
@@ -430,7 +464,7 @@ static id instanse;
     [manager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition(NSURLSession*session, NSURLAuthenticationChallenge *challenge, NSURLCredential *__autoreleasing*_credential) {
         
         NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
-        __autoreleasing NSURLCredential *credential =nil;
+        __autoreleasing NSURLCredential *credential = nil;
         
         if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
             
@@ -438,9 +472,9 @@ static id instanse;
                 credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
                 
                 if(credential) {
-                    disposition =NSURLSessionAuthChallengeUseCredential;
+                    disposition = NSURLSessionAuthChallengeUseCredential;
                 } else {
-                    disposition =NSURLSessionAuthChallengePerformDefaultHandling;
+                    disposition = NSURLSessionAuthChallengePerformDefaultHandling;
                 }
                 
             } else {
@@ -452,7 +486,7 @@ static id instanse;
             SecIdentityRef identity = NULL;
             SecTrustRef trust = NULL;
             NSString * p12 = [[NSBundle mainBundle] pathForResource:@"client"ofType:@"pfx"];
-            NSFileManager *fileManager =[NSFileManager defaultManager];
+            NSFileManager *fileManager = [NSFileManager defaultManager];
             
             if(![fileManager fileExistsAtPath:p12]) {
                 NSLog(@"client.p12:not exist");
@@ -462,10 +496,10 @@ static id instanse;
                 if ([SNNetworking extractIdentity:&identity andTrust:&trust fromPKCS12Data:PKCS12Data]) {
                     SecCertificateRef certificate = NULL;
                     SecIdentityCopyCertificate(identity, &certificate);
-                    const void*certs[] = {certificate};
-                    CFArrayRef certArray =CFArrayCreate(kCFAllocatorDefault, certs,1,NULL);
-                    credential =[NSURLCredential credentialWithIdentity:identity certificates:(__bridge  NSArray*)certArray persistence:NSURLCredentialPersistencePermanent];
-                    disposition =NSURLSessionAuthChallengeUseCredential;
+                    const void * certs[] = {certificate};
+                    CFArrayRef certArray = CFArrayCreate(kCFAllocatorDefault, certs,1,NULL);
+                    credential = [NSURLCredential credentialWithIdentity:identity certificates:(__bridge  NSArray*)certArray persistence:NSURLCredentialPersistencePermanent];
+                    disposition = NSURLSessionAuthChallengeUseCredential;
                 }
             }
         }
@@ -483,18 +517,17 @@ static id instanse;
 + (BOOL)extractIdentity:(SecIdentityRef*)outIdentity andTrust:(SecTrustRef *)outTrust fromPKCS12Data:(NSData *)inPKCS12Data {
     OSStatus securityError = errSecSuccess;
     //client certificate password
-    NSDictionary*optionsDictionary = [NSDictionary dictionaryWithObject:@"你的p12密码"
-                                                                 forKey:(__bridge id)kSecImportExportPassphrase];
+    NSDictionary*optionsDictionary = [NSDictionary dictionaryWithObject:@"你的p12密码" forKey:(__bridge id)kSecImportExportPassphrase];
     
     CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
     securityError = SecPKCS12Import((__bridge CFDataRef)inPKCS12Data,(__bridge CFDictionaryRef)optionsDictionary,&items);
     
     if(securityError == 0) {
-        CFDictionaryRef myIdentityAndTrust =CFArrayGetValueAtIndex(items,0);
-        const void*tempIdentity =NULL;
-        tempIdentity= CFDictionaryGetValue (myIdentityAndTrust,kSecImportItemIdentity);
+        CFDictionaryRef myIdentityAndTrust = CFArrayGetValueAtIndex(items,0);
+        const void * tempIdentity = NULL;
+        tempIdentity = CFDictionaryGetValue (myIdentityAndTrust,kSecImportItemIdentity);
         *outIdentity = (SecIdentityRef)tempIdentity;
-        const void*tempTrust =NULL;
+        const void * tempTrust = NULL;
         tempTrust = CFDictionaryGetValue(myIdentityAndTrust,kSecImportItemTrust);
         *outTrust = (SecTrustRef)tempTrust;
     } else {
