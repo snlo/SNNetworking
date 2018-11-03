@@ -10,6 +10,8 @@ target 'SNNetworking' do
   pod 'AFNetworking'
   pod 'SNTool'
   pod 'SNFoundation'
+  
+  pod 'ReactiveObjC'
 
   target 'SNNetworkingTests' do
     inherit! :search_paths

@@ -8,6 +8,8 @@
 
 #import "AppDelegate.h"
 
+#import "SNNetworking.h"
+
 @interface AppDelegate ()
 
 @end
@@ -17,6 +19,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	// Override point for customization after application launch.
+    
+    [SNNetworking netMonitoringWithResultBlock:^(AFNetworkReachabilityStatus status, NSString *statusValue) {
+        NSLog(@" - - -xxx- - - -- %@",statusValue);
+    }];
+//    [SNNetworking startNetMonitoring];
+    
 	return YES;
 }
 

@@ -28,7 +28,7 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
  */
 
 /**
- *  指定返回数据类型 manager.responseSerializer = [X serializer];
+ *  指定返回数据类型 manager.responseSerializer = [X serializer]; 默认无证书验证
  *  X
  *  AFHTTPResponseSerializer            //data 二进制格式
  *  AFJSONResponseSerializer            //JSON 默认返回的是json数据
@@ -46,22 +46,30 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
  */
 @property (nonatomic, strong) NSString * baseUrl;
 
-/**
- cer/CA 等自签名证书集合
- */
-@property (nonatomic, strong) NSSet <NSData *> * pinnedCertificates;
 
 /**
- 证书x校验，支持单向验证和双向验证
- @return AFSecurityPolicy
+ 单向验证服务器证书
+
+ @param certificate cer/CA 等自签名证书集合 [[NSBundle mainBundle] pathForResource:@"server" ofType:@"cer"]
  */
-- (AFSecurityPolicy *)customSecurityPolicy;
++ (AFHTTPSessionManager *)verificationServerCertificateWith:(NSSet <NSData *> *)certificate;
+
+/**
+ 双向验证
+
+ @param certificate cer/CA 等证书集合
+ @param p12 p12 [[NSBundle mainBundle] pathForResource:@"client"ofType:@"pfx"];
+ @param pas 你的密码
+ */
++ (AFHTTPSessionManager *)verificationClientCertificateWith:(NSSet <NSData *> *)certificate p12:(NSString *)p12 pas:(NSString *)pas;
+
+
 
 #pragma mark -- network methods
 /**
  GET
  */
-+ (void)getWithUrl:(NSString *)url
++ (NSURLSessionDataTask *)getWithUrl:(NSString *)url
         parameters:(id)parameters
           progress:(void(^)(double percentage))progress
            success:(void(^)(id responseObject))success
@@ -71,7 +79,7 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
 /**
  POST
  */
-+ (void)postWithUrl:(NSString *)url
++ (NSURLSessionDataTask *)postWithUrl:(NSString *)url
          parameters:(id)parameters
            progress:(void(^)(double percentage))progress
             success:(void(^)(id responseObject))success
@@ -80,7 +88,7 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
 /**
  POST AND GET
  */
-+ (void)postWithUrl:(NSString *)url
++ (NSURLSessionDataTask *)postWithUrl:(NSString *)url
           getParams:(id)getParams
          parameters:(id)parameters
            progress:(void(^)(double percentage))progress
@@ -90,7 +98,7 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
 /**
  upload
  */
-+ (void)uploadWithUrl:(NSString *)url
++ (NSURLSessionDataTask *)uploadWithUrl:(NSString *)url
            parameters:(id)parameters
             dataArray:(NSArray <NSData *> *)dataArray
                  name:(NSString *)name
@@ -103,11 +111,13 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
 /**
  download
  */
-+ (void)downloadWithUrl:(NSString *)url
++ (NSURLSessionDownloadTask *)downloadWithUrl:(NSString *)url
            fileDownPath:(NSString *)fileDownPath
                progress:(void(^)(double percentage))progress
                 success:(void(^)(id responseObject))success
                 failure:(void(^)(NSError *error))failure;
+
+
 
 #pragma mark -- network state
 /**
@@ -130,31 +140,44 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
  */
 + (void)stopNetMonitoring;
 
+
+
 #pragma mark -- lodaing
-/**
- 取消等待视图
- */
-+ (void)loadingInvalid;
 
 /**
- 恢复等待视图，如果实现了succes、error block 需要再次实现一次。
+ 当前的 NSURLSessionTask 集合，当某个task不需要等待视图时remove掉就可以
  */
-+ (void)loadingRecovery;
+@property (nonatomic, strong) NSCountedSet * networkingCountedSet;
+
+/**
+ 需要逆向更新的标记集合
+ */
+@property (nonatomic, strong) NSCountedSet * networkingUpateCountedSet;
+
+
+
 
 #pragma mark -- update
-/**
- 更新数据，类似于单一冷信号，所以需要在动态方法里面实现
-
- @param block 需要更新操作时实现
- */
-+ (void)updataSource:(void(^)(id object))block;
 
 /**
- 准备更新数据
-
- @param block 需要传递参数时实现
+ 逆向更新，存在判断标记时设置的硬编码
  */
-+ (void)willUpdataSource:(id(^)(void))block;
++ (BOOL)updateSourceFrom:(id)fromUpdateMark;
+
+/**
+ 逆向更新数据标记，标记值为硬编码，注意重复
+ */
++ (void)willUpdataSourceSetMark:(id)updateMark;
+
+/**
+ 断网处理，未实现将提示‘网络连接似乎出了点问题’，可用户处理重新加载逻辑
+ */
++ (void)reloadSource:(void(^)(void))block;
+
+/**
+ 请求超时处理，未实现将提示‘网络可能有点缓慢’
+ */
++ (void)timeOutSource:(void(^)(void))block;
 
 @end
 

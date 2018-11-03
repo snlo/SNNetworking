@@ -10,21 +10,28 @@
 
 #import "SNNetworkTool.h"
 
+typedef void(^ReloadSourceBlock)(void);
+typedef void(^TimeOutSourceBlock)(void);
+typedef void(^UpdataSourceBlock)(void);
+
 @interface SNNetworking ()
 
-//loading
-@property (nonatomic, assign) CGFloat loadingLevel;
-@property (nonatomic, assign) CGFloat loadingLeveling;
-
-//update
-@property (nonatomic, assign) CGFloat updateLevel;
-@property (nonatomic) id updatedObject;
+@property (nonatomic, copy) ReloadSourceBlock reloadSourceBlock;
+@property (nonatomic, copy) TimeOutSourceBlock timeOutSourceBlock;
+@property (nonatomic, copy) UpdataSourceBlock updataSourceBlock;
 
 @end
 
 @implementation SNNetworking
 
 static id instanse;
+
+- (void)dealloc {
+    if (_manager) {
+        [_manager invalidateSessionCancelingTasks:YES];
+    }
+}
+
 
 + (instancetype)allocWithZone:(struct _NSZone *)zone {
 	static dispatch_once_t onesToken;
@@ -44,83 +51,63 @@ static id instanse;
 	return instanse;
 };
 
-#pragma mark -- public methods
+
 
 #pragma mark -- network methods
 //GET
-+ (void)getWithUrl:(NSString *)url parameters:(id)parameters progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure
-{
-    [SNNetworking netWorkingStart];
++ (NSURLSessionDataTask *)getWithUrl:(NSString *)url parameters:(id)parameters progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure {
     
-    [[SNNetworking sharedManager].manager GET:url parameters:parameters progress:^(NSProgress * _Nonnull downloadProgress) {
+    NSURLSessionDataTask * task = [[SNNetworking sharedManager].manager GET:url parameters:parameters progress:^(NSProgress * _Nonnull downloadProgress) {
 
         if (progress) progress(downloadProgress.fractionCompleted);
 
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
 
-        [SNNetworking netWorkingSuccess];
+        [SNNetworking handleNetWorkingSuccessTask:task];
         
         if (success)  {
             success(responseObject);
-        } else {
-            [SNNetworking loadingRecovery];
         }
 
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
 
-        NSLog(@"%@",error.description);
-        NSLog(@" - url - %@",url);
-        NSLog(@" - parameters - %@",parameters);
-        [SNNetworking netWorkingFailure];
+        [SNNetworking handleNetWorkingFailureError:error task:task url:url parameters:parameters];
         
         if (failure) {
             failure(error);
-        } else {
-            [SNNetworking loadingRecovery];
         }
-
     }];
-    
+    [SNNetworking handleNetWorkingStartTask:task];
+    return task;
 }
-
 //POST
-+ (void)postWithUrl:(NSString *)url parameters:(id)parameters progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure
-{
-    [SNNetworking netWorkingStart];
++ (NSURLSessionDataTask *)postWithUrl:(NSString *)url parameters:(id)parameters progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure {
     
-    [[SNNetworking sharedManager].manager POST:url parameters:parameters progress:^(NSProgress * _Nonnull uploadProgress) {
+    NSURLSessionDataTask * task = [[SNNetworking sharedManager].manager POST:url parameters:parameters progress:^(NSProgress * _Nonnull uploadProgress) {
         
         if (progress) progress(uploadProgress.fractionCompleted);
         
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
-        [SNNetworking netWorkingSuccess];
+        [SNNetworking handleNetWorkingSuccessTask:task];
         
         if (success)  {
             success(responseObject);
-        } else {
-            [SNNetworking loadingRecovery];
         }
 
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         
-        NSLog(@"%@",error.description);
-        NSLog(@" - url - %@",url);
-        NSLog(@" - parameters - %@",parameters);
-        [SNNetworking netWorkingFailure];
+        [SNNetworking handleNetWorkingFailureError:error task:task url:url parameters:parameters];
         
         if (failure) {
             failure(error);
-        } else {
-            [SNNetworking loadingRecovery];
         }
-
     }];
+    [SNNetworking handleNetWorkingStartTask:task];
+    return task;
 }
-
 //POST AND GET
-+ (void)postWithUrl:(NSString *)url getParams:(id)getParams parameters:(id)parameters progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure {
-    [SNNetworking netWorkingStart];
++ (NSURLSessionDataTask *)postWithUrl:(NSString *)url getParams:(id)getParams parameters:(id)parameters progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure {
     
     __block NSString * urls = url;
     
@@ -131,39 +118,34 @@ static id instanse;
         }];
     }
     
-    [[SNNetworking sharedManager].manager POST:urls parameters:parameters progress:^(NSProgress * _Nonnull uploadProgress) {
+    NSURLSessionDataTask * task = [[SNNetworking sharedManager].manager POST:urls parameters:parameters progress:^(NSProgress * _Nonnull uploadProgress) {
         
         if (progress) progress(uploadProgress.fractionCompleted);
         
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
-        [SNNetworking netWorkingSuccess];
+        [SNNetworking handleNetWorkingSuccessTask:task];
         
         if (success)  {
             success(responseObject);
-        } else {
-            [SNNetworking loadingRecovery];
         }
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         
-        NSLog(@"%@",error.description);
-        [SNNetworking netWorkingFailure];
+        [SNNetworking handleNetWorkingFailureError:error task:task url:url parameters:parameters];
         
         if (failure) {
             failure(error);
-        } else {
-            [SNNetworking loadingRecovery];
         }
-        
     }];
+    [SNNetworking handleNetWorkingStartTask:task];
+    return task;
 }
-
 //upload
-+ (void)uploadWithUrl:(NSString *)url parameters:(id)parameters dataArray:(NSArray <NSData *> *)dataArray name:(NSString *)name fileSuffixName:(NSString *)fileSuffixName type:(NSString *)type progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure
-{
-    [SNNetworking netWorkingStart];
-    [[SNNetworking sharedManager].manager POST:url parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
++ (NSURLSessionDataTask *)uploadWithUrl:(NSString *)url parameters:(id)parameters dataArray:(NSArray <NSData *> *)dataArray name:(NSString *)name fileSuffixName:(NSString *)fileSuffixName type:(NSString *)type progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure {
+    
+    
+    NSURLSessionDataTask * task = [[SNNetworking sharedManager].manager POST:url parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         
         for (NSData * data in dataArray) {
 
@@ -173,45 +155,36 @@ static id instanse;
             [formData appendPartWithFileData:data name:name fileName:fileName mimeType:type];
         }
         
-        
     } progress:^(NSProgress * _Nonnull uploadProgress) {
         
         if (progress) progress(uploadProgress.fractionCompleted);
         
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
-        [SNNetworking netWorkingSuccess];
+        [SNNetworking handleNetWorkingSuccessTask:task];
         
         if (success)  {
             success(responseObject);
-        } else {
-            [SNNetworking loadingRecovery];
         }
 
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         
-        NSLog(@"%@",error.description);
-        NSLog(@" - url - %@",url);
-        NSLog(@" - parameters - %@",parameters);
-        [SNNetworking netWorkingFailure];
+        [SNNetworking handleNetWorkingFailureError:error task:task url:url parameters:parameters];
         
         if (failure) {
             failure(error);
-        } else {
-            [SNNetworking loadingRecovery];
         }
-
     }];
+    [SNNetworking handleNetWorkingStartTask:task];
+    return task;
 }
-
 //download
-+ (void)downloadWithUrl:(NSString *)url fileDownPath:(NSString *)fileDownPath progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure
-{
-    [SNNetworking netWorkingStart];
++ (NSURLSessionDownloadTask *)downloadWithUrl:(NSString *)url fileDownPath:(NSString *)fileDownPath progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure {
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
 
-    [[[SNNetworking sharedManager].manager downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull downloadProgress) {
+    __block NSURLSessionDownloadTask * task = nil;
+    task = [[SNNetworking sharedManager].manager downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull downloadProgress) {
         
         if (progress) progress(downloadProgress.fractionCompleted);
         
@@ -222,55 +195,97 @@ static id instanse;
     } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
         if (!error) {
             
-            NSLog(@"downloaded response --> %@",response);
-            
-            [SNNetworking netWorkingSuccess];
+            [SNNetworking handleNetWorkingSuccessTask:task];
             
             if (success)  {
                 success(response);
-            } else {
-                [SNNetworking loadingRecovery];
             }
 
         } else {
             
-            NSLog(@"%@",error.description);
-            [SNNetworking netWorkingFailure];
+            [SNNetworking handleNetWorkingFailureError:error task:task url:url parameters:response];
             
             if (failure) {
                 failure(error);
-            } else {
-                [SNNetworking loadingRecovery];
-            }
-            
+            } 
         }
-    }] resume];
-    
+    }];
+    [task resume];
+    [SNNetworking handleNetWorkingStartTask:task];
+    return task;
 }
 
-#pragma mark -- network state
-//cancel request
-+ (void)cancelRequest
-{
++ (void)handleNetWorkingStartTask:(NSURLSessionTask *)task {
+    
+    [SNNetworking startNetMonitoring];
+    [SNNetworking netMonitoringWithResultBlock:^(AFNetworkReachabilityStatus status, NSString *statusValue) {
+        switch (status) {
+            case AFNetworkReachabilityStatusReachableViaWWAN: {
+                
+            } break;
+            case AFNetworkReachabilityStatusReachableViaWiFi: {
+                
+            } break;
+            default: {
+                [SNTool showHUDalertMsg:@"网络连接似乎出了点问题" completion:nil];
+                [SNNetworking cancelRequest];
+            } break;
+        }
+    }];
+    
+    if ([SNNetworking sharedManager].networkingCountedSet.count == 0) {
+        [SNTool showLoading:nil];
+    }
+    [[SNNetworking sharedManager].networkingCountedSet addObject:task];
+}
++ (void)handleNetWorkingSuccessTask:(NSURLSessionTask *)task {
+    
+    [[SNNetworking sharedManager].networkingCountedSet removeObject:task];
+    
+    if ([SNNetworking sharedManager].networkingCountedSet.count == 0) {
+        [SNTool dismissLoading];
+    }
+}
++ (void)handleNetWorkingFailureError:(NSError *)error task:(NSURLSessionTask *)task url:(NSString *)url parameters:(id)parameters  {
+    
+    [[SNNetworking sharedManager].networkingCountedSet removeObject:task];
+    
+    if ([SNNetworking sharedManager].networkingCountedSet.count == 0) {
+        [SNTool dismissLoading];
+    }
+    [task cancel];
+    if (error.code == -1001) {
+        if ([SNNetworking sharedManager].timeOutSourceBlock) {
+            [SNNetworking sharedManager].timeOutSourceBlock();
+        } else {
+            [SNTool showHUDalertMsg:@"网络可能有点缓慢" completion:nil];
+        }
+    }
+    if (error.code == -1009) {
+        if ([SNNetworking sharedManager].reloadSourceBlock) {
+            [SNNetworking sharedManager].reloadSourceBlock();
+        } else {
+            [SNTool showHUDalertMsg:@"网络连接似乎出了点问题" completion:nil];
+        }
+    }
+    
+    NSLog(@"%@",error.description);
+    NSLog(@" - url - %@",url);
+    NSLog(@" - parameters - %@",parameters);
+}
+
++ (void)cancelRequest {
+    [[SNNetworking sharedManager].networkingCountedSet removeAllObjects];
     [[SNNetworking sharedManager].manager.operationQueue cancelAllOperations];
 }
 
-//开始监听网络，建议延时开始；
-+ (void)startNetMonitoring
-{
++ (void)startNetMonitoring {
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
 }
 
-- (void)dealloc {
-    if (_manager) {
-        [_manager invalidateSessionCancelingTasks:YES];
-    }
-}
-
-//监听结果
-+ (void)netMonitoringWithResultBlock:(void(^)(AFNetworkReachabilityStatus status,NSString * statusValue))resultBlock
-{
-    [[AFNetworkReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
++ (void)netMonitoringWithResultBlock:(void(^)(AFNetworkReachabilityStatus status,NSString * statusValue))resultBlock {
+    AFNetworkReachabilityManager *manager = [AFNetworkReachabilityManager sharedManager];
+    [manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         NSString * statusValue = [NSString string];
         switch(status) {
             case AFNetworkReachabilityStatusNotReachable:{
@@ -291,117 +306,35 @@ static id instanse;
         }
         if (resultBlock) resultBlock(status, statusValue);
     }];
-    
+    [manager startMonitoring];
 }
 
 //结束监听
-+ (void)stopNetMonitoring
-{
++ (void)stopNetMonitoring {
     [[AFNetworkReachabilityManager sharedManager] stopMonitoring];
 }
 
-#pragma mark -- lodaing
-+ (void)loadingInvalid {
-    [SNNetworking sharedManager].loadingLeveling = 1500;
-}
-+ (void)loadingRecovery {
-    [SNNetworking sharedManager].loadingLeveling = 500;
-}
-
-+ (void)netWorkingStart {
-    
-    [SNNetworking sharedManager].loadingLevel += 1;
-    if ([SNNetworking sharedManager].loadingLeveling < 1001) {
-        [SNTool showLoading:nil];
-    }
-}
-+ (void)netWorkingSuccess {
-    [SNNetworking sharedManager].loadingLevel -= 1;
-    if ([SNNetworking sharedManager].loadingLeveling < 1001) {
-        if ([SNNetworking sharedManager].loadingLevel <= 0) {
-            [SNTool dismissLoading];
-            [SNNetworking sharedManager].loadingLevel = 0;
-        }
-    }
-}
-+ (void)netWorkingFailure {
-    [SNNetworking sharedManager].loadingLevel -= 1;
-    if ([SNNetworking sharedManager].loadingLeveling < 1001) {
-        if ([SNNetworking sharedManager].loadingLevel <= 0) {
-            [SNTool dismissLoading];
-            [SNNetworking sharedManager].loadingLevel = 0;
-        }
-    }
-}
-
 #pragma mark -- update
-+ (void)updataSource:(void(^)(id object))block {
-    if ([SNNetworking sharedManager].updateLevel > 0) {
-        if (block) {
-            block([SNNetworking sharedManager].updatedObject);
-            [SNNetworking sharedManager].updateLevel = 0;
-        }
+
++ (BOOL)updateSourceFrom:(id)fromUpdateMark {
+    return [[SNNetworking sharedManager].networkingUpateCountedSet containsObject:fromUpdateMark];
+}
+
++ (void)willUpdataSourceSetMark:(id)updateMark {
+    [[SNNetworking sharedManager].networkingUpateCountedSet addObject:updateMark];
+}
++ (void)reloadSource:(void (^)(void))block {
+    if (block) {
+        [SNNetworking sharedManager].reloadSourceBlock = block;
     }
 }
-+ (void)willUpdataSource:(id(^)(void))block {
-    if ([SNNetworking sharedManager].updateLevel < 0) {
-        [SNNetworking sharedManager].updateLevel = 0;
-    }
-    [SNNetworking sharedManager].updateLevel += 1;
++ (void)timeOutSource:(void (^)(void))block {
     if (block) {
-        [SNNetworking sharedManager].updatedObject = block();
+        [SNNetworking sharedManager].timeOutSourceBlock = block;
     }
 }
 
 #pragma mark -- getter
-+ (AFHTTPSessionManager *)verificationServerCertificateWith:(NSArray <NSString *> *)certificatePatchs {
-    
-    AFSecurityPolicy * securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
-    
-    [securityPolicy setAllowInvalidCertificates:YES];
-    securityPolicy.validatesDomainName = NO;
-	
-//	NSString *certFilePath = [[NSBundle mainBundle] pathForResource:@"server" ofType:@"der"];
-	
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	
-	__block NSMutableSet * certificateSet = [[NSMutableSet alloc] init];
-	[certificatePatchs enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-		
-		
-		
-		if (![fileManager fileExistsAtPath:obj]) {
-			NSLog(@"client.p12:not exist");
-			
-			return ;
-		} else {
-			NSData * certificateData = [NSData dataWithContentsOfFile:obj];
-			
-			[certificateSet addObject:certificateData];
-		}
-		
-		
-	}];
-	
-	
-	if (certificateSet.count < 1) {
-		NSLog(@"没有有效的证书");
-	} else {
-		securityPolicy.pinnedCertificates = certificateSet;
-	}
-
-	
-	
-    if (!certificateSet) {
-        @throw [NSException exceptionWithName:@"无效的证书文件,请先配置‘[SNNetworking sharedManager].pinnedCertificates’" reason:@"未找到相关文件" userInfo:nil];
-    } else {
-        securityPolicy.pinnedCertificates = certificateSet;
-    }
-	securityPolicy.pinnedCertificates = certificateSet;
-	[SNNetworking sharedManager].manager.securityPolicy = securityPolicy;
-	
-    return [SNNetworking sharedManager].manager;
-}
 - (AFHTTPSessionManager *)manager {
     if (!_manager) {
         _manager = [AFHTTPSessionManager manager];
@@ -411,7 +344,7 @@ static id instanse;
         _manager.securityPolicy.validatesDomainName = NO;
     }
     
-    _manager.requestSerializer.timeoutInterval = 30.f;//sn_超时
+    _manager.requestSerializer.timeoutInterval = 3.f;//sn_超时
     
     _manager.responseSerializer = [AFJSONResponseSerializer serializer];
     _manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json"
@@ -455,10 +388,38 @@ static id instanse;
     } return _baseUrl;
 }
 
+- (NSCountedSet *)networkingCountedSet {
+    if (!_networkingCountedSet) {
+        _networkingCountedSet = [[NSCountedSet alloc] init];
+    } return _networkingCountedSet;
+}
+- (NSCountedSet *)networkingUpateCountedSet {
+    if (!_networkingUpateCountedSet) {
+        _networkingUpateCountedSet = [[NSCountedSet alloc] init];
+    } return _networkingUpateCountedSet;
+}
 
+#pragma mark -- 证书
++ (AFHTTPSessionManager *)verificationNoCertificate {
+    return [SNNetworking sharedManager].manager;
+}
++ (AFHTTPSessionManager *)verificationServerCertificateWith:(NSSet <NSData *> *)certificate {
+    
+    AFSecurityPolicy * securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
+    
+    [securityPolicy setAllowInvalidCertificates:YES]; //允许无效证书s
+    securityPolicy.validatesDomainName = NO; //不验证域名
 
-+ (AFHTTPSessionManager *)verificationClientCertificateWith:(NSSet <NSData *> *)certificate {
-    __block AFHTTPSessionManager * manager = [AFHTTPSessionManager manager];
+    if (certificate && certificate.count > 0) {
+        securityPolicy.pinnedCertificates = certificate;
+        [SNNetworking sharedManager].manager.securityPolicy = securityPolicy;
+        return [SNNetworking sharedManager].manager;
+    } else {
+        return [SNNetworking verificationNoCertificate];
+    }
+}
++ (AFHTTPSessionManager *)verificationClientCertificateWith:(NSSet <NSData *> *)certificate p12:(NSString *)p12 pas:(NSString *)pas {
+    __block AFHTTPSessionManager * manager = [SNNetworking sharedManager].manager;
     __weak typeof(manager) manager_weak = manager;
     
     [manager setSessionDidReceiveAuthenticationChallengeBlock:^NSURLSessionAuthChallengeDisposition(NSURLSession*session, NSURLAuthenticationChallenge *challenge, NSURLCredential *__autoreleasing*_credential) {
@@ -485,7 +446,6 @@ static id instanse;
             // client authentication
             SecIdentityRef identity = NULL;
             SecTrustRef trust = NULL;
-            NSString * p12 = [[NSBundle mainBundle] pathForResource:@"client"ofType:@"pfx"];
             NSFileManager *fileManager = [NSFileManager defaultManager];
             
             if(![fileManager fileExistsAtPath:p12]) {
@@ -493,7 +453,7 @@ static id instanse;
             } else {
                 NSData * PKCS12Data = [NSData dataWithContentsOfFile:p12];
                 //#加载PKCS12证书，pfx或p12
-                if ([SNNetworking extractIdentity:&identity andTrust:&trust fromPKCS12Data:PKCS12Data]) {
+                if ([SNNetworking extractIdentity:&identity andTrust:&trust fromPKCS12Data:PKCS12Data pas:pas]) {
                     SecCertificateRef certificate = NULL;
                     SecIdentityCopyCertificate(identity, &certificate);
                     const void * certs[] = {certificate};
@@ -514,10 +474,10 @@ static id instanse;
  **加载PKCS12证书，pfx或p12
  **
  **/
-+ (BOOL)extractIdentity:(SecIdentityRef*)outIdentity andTrust:(SecTrustRef *)outTrust fromPKCS12Data:(NSData *)inPKCS12Data {
++ (BOOL)extractIdentity:(SecIdentityRef*)outIdentity andTrust:(SecTrustRef *)outTrust fromPKCS12Data:(NSData *)inPKCS12Data pas:(NSString *)pas {
     OSStatus securityError = errSecSuccess;
     //client certificate password
-    NSDictionary*optionsDictionary = [NSDictionary dictionaryWithObject:@"你的p12密码" forKey:(__bridge id)kSecImportExportPassphrase];
+    NSDictionary*optionsDictionary = [NSDictionary dictionaryWithObject:pas forKey:(__bridge id)kSecImportExportPassphrase];
     
     CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
     securityError = SecPKCS12Import((__bridge CFDataRef)inPKCS12Data,(__bridge CFDictionaryRef)optionsDictionary,&items);
