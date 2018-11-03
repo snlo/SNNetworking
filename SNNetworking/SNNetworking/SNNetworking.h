@@ -165,7 +165,7 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
 + (BOOL)updateSourceFrom:(id)fromUpdateMark;
 
 /**
- 逆向更新数据标记，标记值为硬编码，注意重复
+ 逆向更新数据标记，标记值为硬编码，注意编码重复
  */
 + (void)willUpdataSourceSetMark:(id)updateMark;
 
