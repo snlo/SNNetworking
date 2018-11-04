@@ -150,6 +150,11 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
 @property (nonatomic, strong) NSCountedSet * networkingCountedSet;
 
 /**
+ 不展示loadingView
+ */
++ (void)donotShowLoadingViewAtTask:(NSURLSessionTask *)task;
+
+/**
  需要逆向更新的标记集合
  */
 @property (nonatomic, strong) NSCountedSet * networkingUpateCountedSet;
@@ -172,7 +177,7 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
 /**
  断网处理，未实现将提示‘网络连接似乎出了点问题’，可用户处理重新加载逻辑
  */
-+ (void)reloadSource:(void(^)(void))block;
++ (void)brokenSource:(void(^)(void))block;
 
 /**
  请求超时处理，未实现将提示‘网络可能有点缓慢’

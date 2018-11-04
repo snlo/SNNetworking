@@ -10,13 +10,13 @@
 
 #import "SNNetworkTool.h"
 
-typedef void(^ReloadSourceBlock)(void);
+typedef void(^BrokenSourceBlock)(void);
 typedef void(^TimeOutSourceBlock)(void);
 typedef void(^UpdataSourceBlock)(void);
 
 @interface SNNetworking ()
 
-@property (nonatomic, copy) ReloadSourceBlock reloadSourceBlock;
+@property (nonatomic, copy) BrokenSourceBlock brokenSourceBlock;
 @property (nonatomic, copy) TimeOutSourceBlock timeOutSourceBlock;
 @property (nonatomic, copy) UpdataSourceBlock updataSourceBlock;
 
@@ -55,7 +55,11 @@ static id instanse;
 
 #pragma mark -- network methods
 //GET
-+ (NSURLSessionDataTask *)getWithUrl:(NSString *)url parameters:(id)parameters progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure {
++ (NSURLSessionDataTask *)getWithUrl:(NSString *)url
+                          parameters:(id)parameters
+                            progress:(void(^)(double percentage))progress
+                             success:(void(^)(id responseObject))success
+                             failure:(void(^)(NSError *error))failure {
     
     NSURLSessionDataTask * task = [[SNNetworking sharedManager].manager GET:url parameters:parameters progress:^(NSProgress * _Nonnull downloadProgress) {
 
@@ -81,7 +85,11 @@ static id instanse;
     return task;
 }
 //POST
-+ (NSURLSessionDataTask *)postWithUrl:(NSString *)url parameters:(id)parameters progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure {
++ (NSURLSessionDataTask *)postWithUrl:(NSString *)url
+                           parameters:(id)parameters
+                             progress:(void(^)(double percentage))progress
+                              success:(void(^)(id responseObject))success
+                              failure:(void(^)(NSError *error))failure {
     
     NSURLSessionDataTask * task = [[SNNetworking sharedManager].manager POST:url parameters:parameters progress:^(NSProgress * _Nonnull uploadProgress) {
         
@@ -107,7 +115,12 @@ static id instanse;
     return task;
 }
 //POST AND GET
-+ (NSURLSessionDataTask *)postWithUrl:(NSString *)url getParams:(id)getParams parameters:(id)parameters progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure {
++ (NSURLSessionDataTask *)postWithUrl:(NSString *)url
+                            getParams:(id)getParams
+                           parameters:(id)parameters
+                             progress:(void(^)(double percentage))progress
+                              success:(void(^)(id responseObject))success
+                              failure:(void(^)(NSError *error))failure {
     
     __block NSString * urls = url;
     
@@ -142,7 +155,15 @@ static id instanse;
     return task;
 }
 //upload
-+ (NSURLSessionDataTask *)uploadWithUrl:(NSString *)url parameters:(id)parameters dataArray:(NSArray <NSData *> *)dataArray name:(NSString *)name fileSuffixName:(NSString *)fileSuffixName type:(NSString *)type progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure {
++ (NSURLSessionDataTask *)uploadWithUrl:(NSString *)url
+                             parameters:(id)parameters
+                              dataArray:(NSArray <NSData *> *)dataArray
+                                   name:(NSString *)name
+                         fileSuffixName:(NSString *)fileSuffixName
+                                   type:(NSString *)type
+                               progress:(void(^)(double percentage))progress
+                                success:(void(^)(id responseObject))success
+                                failure:(void(^)(NSError *error))failure {
     
     
     NSURLSessionDataTask * task = [[SNNetworking sharedManager].manager POST:url parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
@@ -179,7 +200,11 @@ static id instanse;
     return task;
 }
 //download
-+ (NSURLSessionDownloadTask *)downloadWithUrl:(NSString *)url fileDownPath:(NSString *)fileDownPath progress:(void(^)(double percentage))progress success:(void(^)(id responseObject))success failure:(void(^)(NSError *error))failure {
++ (NSURLSessionDownloadTask *)downloadWithUrl:(NSString *)url
+                                 fileDownPath:(NSString *)fileDownPath
+                                     progress:(void(^)(double percentage))progress
+                                      success:(void(^)(id responseObject))success
+                                      failure:(void(^)(NSError *error))failure {
     
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
 
@@ -215,6 +240,7 @@ static id instanse;
     return task;
 }
 
+#pragma mark -- handle
 + (void)handleNetWorkingStartTask:(NSURLSessionTask *)task {
     
     [SNNetworking startNetMonitoring];
@@ -262,8 +288,8 @@ static id instanse;
         }
     }
     if (error.code == -1009) {
-        if ([SNNetworking sharedManager].reloadSourceBlock) {
-            [SNNetworking sharedManager].reloadSourceBlock();
+        if ([SNNetworking sharedManager].brokenSourceBlock) {
+            [SNNetworking sharedManager].brokenSourceBlock();
         } else {
             [SNTool showHUDalertMsg:@"网络连接似乎出了点问题" completion:nil];
         }
@@ -274,6 +300,11 @@ static id instanse;
     NSLog(@" - parameters - %@",parameters);
 }
 
++ (void)donotShowLoadingViewAtTask:(NSURLSessionTask *)task {
+    [[SNNetworking sharedManager].networkingCountedSet removeObject:task];
+}
+
+#pragma mark -- network Monitoring
 + (void)cancelRequest {
     [[SNNetworking sharedManager].networkingCountedSet removeAllObjects];
     [[SNNetworking sharedManager].manager.operationQueue cancelAllOperations];
@@ -323,9 +354,9 @@ static id instanse;
 + (void)willUpdataSourceSetMark:(id)updateMark {
     [[SNNetworking sharedManager].networkingUpateCountedSet addObject:updateMark];
 }
-+ (void)reloadSource:(void (^)(void))block {
++ (void)brokenSource:(void (^)(void))block {
     if (block) {
-        [SNNetworking sharedManager].reloadSourceBlock = block;
+        [SNNetworking sharedManager].brokenSourceBlock = block;
     }
 }
 + (void)timeOutSource:(void (^)(void))block {
