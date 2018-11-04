@@ -52,21 +52,40 @@
 - (IBAction)handleButtonTest:(UIButton *)sender {
     
     
-    for (int i = 0; i < 10; i ++) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [sender setImageForState:UIControlStateNormal withURL:[NSURL URLWithString:@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1538297604133&di=d40c527784e7aeee3682f9ae986253b8&imgtype=0&src=http%3A%2F%2Fpic.pptbz.com%2F2dd01506%2F2015070581208537.JPG"]];
-
-            [SNNetworking getImageWithimgurl:@"http://i6.download.fd.pchome.net/t_320x520/g1/M00/05/05/oYYBAFIJtZWIT-o6AAPA_gqRV2gAAAxnQCO6R4AA8EW364.jpg" progress:^(double percentage) {
-
-            } success:^(id responseObject) {
-
-            } failure:^(NSError *error) {
-
-            }];
-        });
-    }
+//    for (int i = 0; i < 10; i ++) {
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            [sender setImageForState:UIControlStateNormal withURL:[NSURL URLWithString:@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1538297604133&di=d40c527784e7aeee3682f9ae986253b8&imgtype=0&src=http%3A%2F%2Fpic.pptbz.com%2F2dd01506%2F2015070581208537.JPG"]];
+//
+//            [SNNetworking getImageWithimgurl:@"http://i6.download.fd.pchome.net/t_320x520/g1/M00/05/05/oYYBAFIJtZWIT-o6AAPA_gqRV2gAAAxnQCO6R4AA8EW364.jpg" progress:^(double percentage) {
+//
+//            } success:^(id responseObject) {
+//
+//            } failure:^(NSError *error) {
+//
+//            }];
+//        });
+//    }
+    
+    [self.sset addObject:@"11"];
+    [self.sset addObject:@"22"];
+    [self.sset addObject:@"33"];
+    [self.sset addObject:@"44"];
+    [self.sset addObject:@"55"];
+    [self.sset addObject:@"11"];
+    [self.sset addObject:@"22"];
+    [self.sset addObject:@"33"];
+    [self.sset addObject:@"44"];
+    [self.sset addObject:@"55"];
+    [self.sset addObject:@"55"];
+    [self.sset addObject:@"66"];
     
     
+    NSLog(@" -- - -%@",self.sset);
+    [self.sset removeObject:@"55"];
+    NSLog(@" = - = =  %@",[self.sset objectEnumerator].allObjects);
+    [self.sset enumerateObjectsUsingBlock:^(id  _Nonnull obj, BOOL * _Nonnull stop) {
+        NSLog(@"%@:%lu",obj,(unsigned long)[self.sset countForObject:obj]);
+    }];
     
 }
 
@@ -78,8 +97,11 @@
 
 - (NSCountedSet *)sset {
     if (!_sset) {
-        _sset = [[NSCountedSet alloc] init];
+        _sset = [[NSCountedSet alloc] initWithCapacity:5];
     } return _sset;
 }
+
+
+
 
 @end

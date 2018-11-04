@@ -259,16 +259,18 @@ static id instanse;
         }
     }];
     
-    if ([SNNetworking sharedManager].networkingCountedSet.count == 0) {
-        [SNTool showLoading:nil];
-    }
     [[SNNetworking sharedManager].networkingCountedSet addObject:task];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if ([SNNetworking sharedManager].networkingCountedSet.count > 0) {
+            [SNTool showLoading:nil];
+        }
+    });
 }
 + (void)handleNetWorkingSuccessTask:(NSURLSessionTask *)task {
     
     [[SNNetworking sharedManager].networkingCountedSet removeObject:task];
     
-    if ([SNNetworking sharedManager].networkingCountedSet.count == 0) {
+    if ([SNNetworking sharedManager].networkingCountedSet.count < 1) {
         [SNTool dismissLoading];
     }
 }
@@ -276,7 +278,7 @@ static id instanse;
     
     [[SNNetworking sharedManager].networkingCountedSet removeObject:task];
     
-    if ([SNNetworking sharedManager].networkingCountedSet.count == 0) {
+    if ([SNNetworking sharedManager].networkingCountedSet.count < 1) {
         [SNTool dismissLoading];
     }
     [task cancel];
@@ -348,7 +350,12 @@ static id instanse;
 #pragma mark -- update
 
 + (BOOL)updateSourceFrom:(id)fromUpdateMark {
-    return [[SNNetworking sharedManager].networkingUpateCountedSet containsObject:fromUpdateMark];
+    if ([[SNNetworking sharedManager].networkingUpateCountedSet containsObject:fromUpdateMark]) {
+        [[SNNetworking sharedManager].networkingUpateCountedSet removeObject:fromUpdateMark];
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 + (void)willUpdataSourceSetMark:(id)updateMark {
@@ -373,9 +380,9 @@ static id instanse;
         _manager.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
         _manager.securityPolicy.allowInvalidCertificates = YES;
         _manager.securityPolicy.validatesDomainName = NO;
+        
+        _manager.requestSerializer.timeoutInterval = 30.f;//sn_超时
     }
-    
-    _manager.requestSerializer.timeoutInterval = 3.f;//sn_超时
     
     _manager.responseSerializer = [AFJSONResponseSerializer serializer];
     _manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json"
