@@ -253,7 +253,11 @@ static id instanse;
                 
             } break;
             default: {
-                [SNTool showHUDalertMsg:@"网络连接似乎出了点问题" completion:nil];
+                if ([SNNetworking sharedManager].brokenSourceBlock) {
+                    [SNNetworking sharedManager].brokenSourceBlock();
+                } else {
+                    [SNTool showHUDalertMsg:@"网络连接似乎出了点问题" completion:nil];
+                }
                 [SNNetworking cancelRequest];
             } break;
         }
