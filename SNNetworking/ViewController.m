@@ -65,27 +65,8 @@
 //            }];
 //        });
 //    }
-    
-    [self.sset addObject:@"11"];
-    [self.sset addObject:@"22"];
-    [self.sset addObject:@"33"];
-    [self.sset addObject:@"44"];
-    [self.sset addObject:@"55"];
-    [self.sset addObject:@"11"];
-    [self.sset addObject:@"22"];
-    [self.sset addObject:@"33"];
-    [self.sset addObject:@"44"];
-    [self.sset addObject:@"55"];
-    [self.sset addObject:@"55"];
-    [self.sset addObject:@"66"];
-    
-    
-    NSLog(@" -- - -%@",self.sset);
-    [self.sset removeObject:@"55"];
-    NSLog(@" = - = =  %@",[self.sset objectEnumerator].allObjects);
-    [self.sset enumerateObjectsUsingBlock:^(id  _Nonnull obj, BOOL * _Nonnull stop) {
-        NSLog(@"%@:%lu",obj,(unsigned long)[self.sset countForObject:obj]);
-    }];
+    NSString * sting = @"0.0001";
+    NSLog(@"- -- - %@",[sting doubleValue]<=0.00?@"YES":@"NO");
     
 }
 

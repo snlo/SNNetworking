@@ -18,9 +18,14 @@
                    success:(void(^)(id responseObject))success
                    failure:(void(^)(NSError *error))failure {
     
-    [SNNetworking getWithUrl:imgurl parameters:nil progress:progress success:success failure:failure];
-    
-    [SNNetworking sharedManager].manager.responseSerializer = [AFImageResponseSerializer serializer];
+    AFHTTPSessionManager * manager = [SNNetworking sharedManager].manager;
+    [manager GET:imgurl parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
+        manager.responseSerializer = [AFImageResponseSerializer serializer];
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (success) success(responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (failure) failure(error);
+    }];
     
 }
 
