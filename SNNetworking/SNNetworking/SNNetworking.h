@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import <AFNetworking.h>
-#import <UIKit+AFNetworking.h>
+#import <AFNetworking/AFNetworking.h>
+#import <AFNetworking/UIKit+AFNetworking.h>
 
 __attribute__((objc_subclassing_restricted))
 

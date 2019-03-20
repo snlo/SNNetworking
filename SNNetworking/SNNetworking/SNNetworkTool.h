@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import <SNTool.h>
-#import <SNFoundation.h>
+#import <SNTool/SNTool.h>
+#import <SNFoundation/SNFoundation.h>
 
 #import "SNNetworkTransformer.h"
 #import "SNFileNetworkManager.h"
