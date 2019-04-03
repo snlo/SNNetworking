@@ -1,1 +1,0 @@
-../../../SNFoundation/SNFoundation/SNFoundation/NSObject+SNFoundation.h
