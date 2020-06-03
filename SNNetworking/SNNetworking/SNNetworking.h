@@ -71,6 +71,7 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
  */
 + (NSURLSessionDataTask *)getWithUrl:(NSString *)url
         parameters:(id)parameters
+           headers:(NSDictionary <NSString *, NSString *> *)headers
           progress:(void(^)(double percentage))progress
            success:(void(^)(id responseObject))success
            failure:(void(^)(NSError *error))failure;
@@ -81,6 +82,7 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
  */
 + (NSURLSessionDataTask *)postWithUrl:(NSString *)url
          parameters:(id)parameters
+            headers:(NSDictionary <NSString *, NSString *> *)headers
            progress:(void(^)(double percentage))progress
             success:(void(^)(id responseObject))success
             failure:(void(^)(NSError *error))failure;
@@ -91,6 +93,7 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
 + (NSURLSessionDataTask *)postWithUrl:(NSString *)url
           getParams:(id)getParams
          parameters:(id)parameters
+			headers:(NSDictionary <NSString *, NSString *> *)headers
            progress:(void(^)(double percentage))progress
             success:(void(^)(id responseObject))success
             failure:(void(^)(NSError *error))failure;
@@ -100,6 +103,7 @@ __attribute__((objc_runtime_name("snloбЇЯАзЪСЯ")))
  */
 + (NSURLSessionDataTask *)uploadWithUrl:(NSString *)url
            parameters:(id)parameters
+			  headers:(NSDictionary<NSString *,NSString *> *)headers
             dataArray:(NSArray <NSData *> *)dataArray
                  name:(NSString *)name
        fileSuffixName:(NSString *)fileSuffixName

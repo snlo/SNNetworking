@@ -68,6 +68,32 @@
     NSString * sting = @"0.0001";
     NSLog(@"- -- - %@",[sting doubleValue]<=0.00?@"YES":@"NO");
     
+//
+	/*
+	 @{
+		 @"content-type":@"application/json",
+		 @"x-apikey":@"57993a58a31ecccac1c41893a674840e51196",
+		 @"cache-control":@"no-cache"
+	 }
+	 */
+	
+//	[SNNetworking getWithUrl:@"https://shops-045a.restdb.io/rest/users" parameters:nil
+//					 headers:@{
+//						 @"content-type":@"application/json",
+//						 @"x-apikey":@"57993a58a31ecccac1c41893a674840e51196",
+//						 @"cache-control":@"no-cache"
+//					 } progress:^(double percentage) {
+//		NSLog(@"percentage - %f",percentage);
+//	} success:^(id responseObject) {
+//		NSLog(@"responseObject - %@",responseObject);
+//	} failure:^(NSError *error) {
+//		NSLog(@"error - %@",error);
+//	}];
+	
+	
+	
+	// askdgko
+	
 }
 
 - (void)didReceiveMemoryWarning {

@@ -21,7 +21,7 @@
     AFHTTPSessionManager * manager = [SNNetworking sharedManager].manager.copy;
     manager.responseSerializer = [AFImageResponseSerializer serializer];
     
-    [manager GET:imgurl parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
+    [manager GET:imgurl parameters:nil headers:nil progress:^(NSProgress * _Nonnull downloadProgress) {
         if (progress) progress(downloadProgress.fractionCompleted);
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) success(responseObject);

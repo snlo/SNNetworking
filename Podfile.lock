@@ -1,23 +1,23 @@
 PODS:
-  - AFNetworking (3.2.1):
-    - AFNetworking/NSURLSession (= 3.2.1)
-    - AFNetworking/Reachability (= 3.2.1)
-    - AFNetworking/Security (= 3.2.1)
-    - AFNetworking/Serialization (= 3.2.1)
-    - AFNetworking/UIKit (= 3.2.1)
-  - AFNetworking/NSURLSession (3.2.1):
+  - AFNetworking (4.0.1):
+    - AFNetworking/NSURLSession (= 4.0.1)
+    - AFNetworking/Reachability (= 4.0.1)
+    - AFNetworking/Security (= 4.0.1)
+    - AFNetworking/Serialization (= 4.0.1)
+    - AFNetworking/UIKit (= 4.0.1)
+  - AFNetworking/NSURLSession (4.0.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (3.2.1)
-  - AFNetworking/Security (3.2.1)
-  - AFNetworking/Serialization (3.2.1)
-  - AFNetworking/UIKit (3.2.1):
+  - AFNetworking/Reachability (4.0.1)
+  - AFNetworking/Security (4.0.1)
+  - AFNetworking/Serialization (4.0.1)
+  - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
-  - MBProgressHUD (1.1.0)
-  - ReactiveObjC (3.1.0)
+  - MBProgressHUD (1.2.0)
+  - ReactiveObjC (3.1.1)
   - SNFoundation (0.0.4)
-  - SNTool (0.1.0):
+  - SNTool (0.1.6):
     - MBProgressHUD
 
 DEPENDENCIES:
@@ -27,7 +27,7 @@ DEPENDENCIES:
   - SNTool
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - AFNetworking
     - MBProgressHUD
     - ReactiveObjC
@@ -35,12 +35,12 @@ SPEC REPOS:
     - SNTool
 
 SPEC CHECKSUMS:
-  AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
-  MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
-  ReactiveObjC: 2a38ea15335de4119d8b17caf1db1484f61db902
+  AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
   SNFoundation: dc9691581e4e744e50b1505a53d659b1197073b5
-  SNTool: 39bd872467b22d392fff945e21dd2748fed2949b
+  SNTool: 8cb927cbbb026e16a77c744966107afc943e6f59
 
-PODFILE CHECKSUM: d6ab5946b581eddce68719e48c3bee83aed1e8b7
+PODFILE CHECKSUM: a42c539c5ed0a75c176414a3cd9c2f588007651f
 
-COCOAPODS: 1.7.0.beta.2
+COCOAPODS: 1.8.4

@@ -28,7 +28,7 @@ static id instanse;
 
 - (void)dealloc {
     if (_manager) {
-        [_manager invalidateSessionCancelingTasks:YES];
+        [_manager invalidateSessionCancelingTasks:YES resetSession:YES];
     }
 }
 
@@ -57,11 +57,12 @@ static id instanse;
 //GET
 + (NSURLSessionDataTask *)getWithUrl:(NSString *)url
                           parameters:(id)parameters
+                             headers:(NSDictionary <NSString *, NSString *> *)headers
                             progress:(void(^)(double percentage))progress
                              success:(void(^)(id responseObject))success
                              failure:(void(^)(NSError *error))failure {
     
-    NSURLSessionDataTask * task = [[SNNetworking sharedManager].manager GET:url parameters:parameters progress:^(NSProgress * _Nonnull downloadProgress) {
+    NSURLSessionDataTask * task = [[SNNetworking sharedManager].manager GET:url parameters:parameters headers:headers progress:^(NSProgress * _Nonnull downloadProgress) {
 
         if (progress) progress(downloadProgress.fractionCompleted);
 
@@ -87,11 +88,12 @@ static id instanse;
 //POST
 + (NSURLSessionDataTask *)postWithUrl:(NSString *)url
                            parameters:(id)parameters
+							  headers:(NSDictionary <NSString *, NSString *> *)headers
                              progress:(void(^)(double percentage))progress
                               success:(void(^)(id responseObject))success
                               failure:(void(^)(NSError *error))failure {
     
-    NSURLSessionDataTask * task = [[SNNetworking sharedManager].manager POST:url parameters:parameters progress:^(NSProgress * _Nonnull uploadProgress) {
+    NSURLSessionDataTask * task = [[SNNetworking sharedManager].manager POST:url parameters:parameters headers:headers progress:^(NSProgress * _Nonnull uploadProgress) {
         
         if (progress) progress(uploadProgress.fractionCompleted);
         
@@ -118,6 +120,7 @@ static id instanse;
 + (NSURLSessionDataTask *)postWithUrl:(NSString *)url
                             getParams:(id)getParams
                            parameters:(id)parameters
+							  headers:(NSDictionary <NSString *, NSString *> *)headers
                              progress:(void(^)(double percentage))progress
                               success:(void(^)(id responseObject))success
                               failure:(void(^)(NSError *error))failure {
@@ -131,7 +134,7 @@ static id instanse;
         }];
     }
     
-    NSURLSessionDataTask * task = [[SNNetworking sharedManager].manager POST:urls parameters:parameters progress:^(NSProgress * _Nonnull uploadProgress) {
+    NSURLSessionDataTask * task = [[SNNetworking sharedManager].manager POST:urls parameters:parameters headers:headers progress:^(NSProgress * _Nonnull uploadProgress) {
         
         if (progress) progress(uploadProgress.fractionCompleted);
         
@@ -157,6 +160,7 @@ static id instanse;
 //upload
 + (NSURLSessionDataTask *)uploadWithUrl:(NSString *)url
                              parameters:(id)parameters
+								headers:(NSDictionary<NSString *,NSString *> *)headers
                               dataArray:(NSArray <NSData *> *)dataArray
                                    name:(NSString *)name
                          fileSuffixName:(NSString *)fileSuffixName
@@ -166,7 +170,7 @@ static id instanse;
                                 failure:(void(^)(NSError *error))failure {
     
     
-    NSURLSessionDataTask * task = [[SNNetworking sharedManager].manager POST:url parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+    NSURLSessionDataTask * task = [[SNNetworking sharedManager].manager POST:url parameters:parameters headers:headers constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
         
         for (NSData * data in dataArray) {
 

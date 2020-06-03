@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		27BB826412498A62817F1014 /* libPods-SNNetworkingTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 901DA24041099256D514810F /* libPods-SNNetworkingTests.a */; };
-		3DF5A17FF8579A5B4D760679 /* libPods-SNNetworkingUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9CEFD0FF083B594D7734B8 /* libPods-SNNetworkingUITests.a */; };
+		1E97BC1EC379CED3C5C2631A /* Pods_SNNetworkingUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12E761E46681275F2F3B8D96 /* Pods_SNNetworkingUITests.framework */; };
 		5EB0042C20A0B814003E8AF8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EB0042B20A0B814003E8AF8 /* AppDelegate.m */; };
 		5EB0042F20A0B814003E8AF8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EB0042E20A0B814003E8AF8 /* ViewController.m */; };
 		5EB0043220A0B814003E8AF8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EB0043020A0B814003E8AF8 /* Main.storyboard */; };
@@ -22,8 +21,9 @@
 		5EB0046820A0B978003E8AF8 /* SNFileNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EB0046020A0B978003E8AF8 /* SNFileNetworkManager.m */; };
 		5EB0046920A0B978003E8AF8 /* SNNetworkTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EB0046120A0B978003E8AF8 /* SNNetworkTransformer.m */; };
 		5EB0046C20A0B9FA003E8AF8 /* SNNetworkTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EB0046B20A0B9FA003E8AF8 /* SNNetworkTool.m */; };
-		8018630E41051C1D267BC3AD /* libPods-SNNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86D07D0001D56137E02A712F /* libPods-SNNetworking.a */; };
+		6B19EF40235E5667F7D7493A /* Pods_SNNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 173AC2C10BF210A688232A49 /* Pods_SNNetworking.framework */; };
 		983CE4D620B27495007987FD /* SNNetworking+SNNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 983CE4D520B27495007987FD /* SNNetworking+SNNetworking.m */; };
+		990C41B9A05B30D0915B054C /* Pods_SNNetworkingTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBC926476E85EF6E9A5E774B /* Pods_SNNetworkingTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,7 +44,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0A9CEFD0FF083B594D7734B8 /* libPods-SNNetworkingUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SNNetworkingUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		12E761E46681275F2F3B8D96 /* Pods_SNNetworkingUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SNNetworkingUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		173AC2C10BF210A688232A49 /* Pods_SNNetworking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SNNetworking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AEE84CBBB7B991DCC30F445 /* Pods-SNNetworking.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SNNetworking.release.xcconfig"; path = "Pods/Target Support Files/Pods-SNNetworking/Pods-SNNetworking.release.xcconfig"; sourceTree = "<group>"; };
 		4946A2B0C5B70EFDB4D59A38 /* Pods-SNNetworkingUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SNNetworkingUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SNNetworkingUITests/Pods-SNNetworkingUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		49AAC368726A7FA54E8C08B8 /* Pods-SNNetworking.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SNNetworking.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SNNetworking/Pods-SNNetworking.debug.xcconfig"; sourceTree = "<group>"; };
@@ -76,11 +77,10 @@
 		5EB0046520A0B978003E8AF8 /* SNNetworkTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNNetworkTransformer.h; sourceTree = "<group>"; };
 		5EB0046A20A0B9FA003E8AF8 /* SNNetworkTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SNNetworkTool.h; sourceTree = "<group>"; };
 		5EB0046B20A0B9FA003E8AF8 /* SNNetworkTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SNNetworkTool.m; sourceTree = "<group>"; };
-		86D07D0001D56137E02A712F /* libPods-SNNetworking.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SNNetworking.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C9F1A16FE6DF3C8F5FDA20C /* Pods-SNNetworkingTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SNNetworkingTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SNNetworkingTests/Pods-SNNetworkingTests.debug.xcconfig"; sourceTree = "<group>"; };
-		901DA24041099256D514810F /* libPods-SNNetworkingTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SNNetworkingTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		983CE4D420B27495007987FD /* SNNetworking+SNNetworking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SNNetworking+SNNetworking.h"; sourceTree = "<group>"; };
 		983CE4D520B27495007987FD /* SNNetworking+SNNetworking.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SNNetworking+SNNetworking.m"; sourceTree = "<group>"; };
+		EBC926476E85EF6E9A5E774B /* Pods_SNNetworkingTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SNNetworkingTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,7 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8018630E41051C1D267BC3AD /* libPods-SNNetworking.a in Frameworks */,
+				6B19EF40235E5667F7D7493A /* Pods_SNNetworking.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,7 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27BB826412498A62817F1014 /* libPods-SNNetworkingTests.a in Frameworks */,
+				990C41B9A05B30D0915B054C /* Pods_SNNetworkingTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,7 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DF5A17FF8579A5B4D760679 /* libPods-SNNetworkingUITests.a in Frameworks */,
+				1E97BC1EC379CED3C5C2631A /* Pods_SNNetworkingUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,9 +114,9 @@
 		1B3FFF885E7EBFA31709FBEC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				86D07D0001D56137E02A712F /* libPods-SNNetworking.a */,
-				901DA24041099256D514810F /* libPods-SNNetworkingTests.a */,
-				0A9CEFD0FF083B594D7734B8 /* libPods-SNNetworkingUITests.a */,
+				173AC2C10BF210A688232A49 /* Pods_SNNetworking.framework */,
+				EBC926476E85EF6E9A5E774B /* Pods_SNNetworkingTests.framework */,
+				12E761E46681275F2F3B8D96 /* Pods_SNNetworkingUITests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -221,7 +221,7 @@
 				5EB0042320A0B814003E8AF8 /* Sources */,
 				5EB0042420A0B814003E8AF8 /* Frameworks */,
 				5EB0042520A0B814003E8AF8 /* Resources */,
-				05B0EE834A593436C4EDB10C /* [CP] Copy Pods Resources */,
+				3E7437D2120D04955074C080 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -340,21 +340,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		05B0EE834A593436C4EDB10C /* [CP] Copy Pods Resources */ = {
+		3E7437D2120D04955074C080 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SNNetworking/Pods-SNNetworking-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-SNNetworking/Pods-SNNetworking-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SNNetworking/Pods-SNNetworking-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-SNNetworking/Pods-SNNetworking-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SNNetworking/Pods-SNNetworking-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SNNetworking/Pods-SNNetworking-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		87D993EC0ECEF8DC38643558 /* [CP] Check Pods Manifest.lock */ = {
